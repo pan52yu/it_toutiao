@@ -1,14 +1,26 @@
-import TouTiao from '@/components/TouTiaoIcon.vue';
-import '@/styles/index.less';
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-import store from './store';
-Vue.component('TouTiao', TouTiao);
+import App from "./App.vue";
+import Vue from "vue";
+import router from "./router";
+import TouTiao from "@/components/TouTiaoIcon.vue";
+import "@/styles/index.less";
+import "amfe-flexible";
+import store from "./store";
+import "vant/lib/index.less";
+// vant注册
+import vant from "vant";
+
+import request from "@/utils/request";
+
+request.get("/v1_0/channels").then((res) => {
+  console.log(res.data.data.channels);
+});
+
+Vue.use(vant);
+Vue.component("TouTiao", TouTiao);
 Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
-  render: h => h(App),
-}).$mount('#app');
+  render: (h) => h(App),
+}).$mount("#app");

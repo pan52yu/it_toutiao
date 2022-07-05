@@ -1,10 +1,14 @@
 <template>
   <div id="app">
-    <h1>我是App</h1>
-    <!-- <i class="toutiao toutiao-yuedu"></i>
-    <i class="toutiao toutiao-sousuo"></i> -->
+    <!-- <h1>我是App</h1>
     <TouTiao icon="dianzan"></TouTiao>
     <TouTiao icon="sousuo"></TouTiao>
+    <van-button type="primary">主要按钮</van-button>
+    <van-button type="info">信息按钮</van-button>
+    <van-button type="default">默认按钮</van-button>
+    <van-button type="warning">警告按钮</van-button>
+    <van-button type="danger">危险按钮</van-button>
+    <h1>App</h1> -->
     <router-view />
   </div>
 </template>
