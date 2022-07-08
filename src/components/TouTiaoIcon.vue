@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <i :class="['toutiao', `toutiao-${icon}`]"></i>
-  </div>
+  <i :class="['toutiao', `toutiao-${icon}`]"></i>
 </template>
 
 <script>

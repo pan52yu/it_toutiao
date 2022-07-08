@@ -14,3 +14,11 @@ export const getSmsCode = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`,
   });
 };
+
+// 获取用户信息接口
+export const getUserInfo = () => {
+  return request({
+    url: "/v1_0/user",
+    method: "GET",
+  });
+};
