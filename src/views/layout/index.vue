@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container">
     <router-view></router-view>
-    <van-tabbar v-model="active" class="layout-tabbar">
+    <van-tabbar v-model="active" class="layout-tabbar" route>
       <van-tabbar-item to="/home">
         <template #icon>
           <TouTiao icon="shouye"></TouTiao>

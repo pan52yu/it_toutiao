@@ -1,5 +1,6 @@
 <template>
   <div class="home-container">
+    <!--  顶部搜索框  -->
     <van-nav-bar fixed title="搜索">
       <template #title>
         <van-button
@@ -12,6 +13,7 @@
         </van-button>
       </template>
     </van-nav-bar>
+    <!--  频道列表  -->
     <van-tabs v-model="active" class="channel-tabs" animated swipeable>
       <van-tab v-for="item in userChannels" :key="item.id" :title="item.name">
         <ArticleList :channel="item"></ArticleList>
@@ -19,22 +21,42 @@
 
       <template #nav-right>
         <div class="placeholder"></div>
-        <TouTiao icon="gengduo" class="hamburger-btn"></TouTiao>
+        <TouTiao
+          icon="gengduo"
+          class="hamburger-btn"
+          @click.native="showPopup = true"
+        ></TouTiao>
       </template>
     </van-tabs>
+    <!--  汉堡弹出层  -->
+    <van-popup
+      v-model="showPopup"
+      :style="{ height: '90%' }"
+      position="bottom"
+      closeable
+      close-icon-position="top-left"
+    >
+      <ChannelEdit
+        @toggleNav="toggleNav"
+        :userChannels="userChannels"
+        :active="active"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from "@/api/channel";
 import ArticleList from "@/views/home/components/article-list";
+import ChannelEdit from "@/views/home/components/channel-edit";
 
 export default {
   name: "HomePage",
-  components: { ArticleList },
+  components: { ChannelEdit, ArticleList },
   props: {},
   data() {
     return {
+      showPopup: false,
       active: 0,
       userChannels: [],
     };
@@ -46,6 +68,11 @@ export default {
   },
   mounted() {},
   methods: {
+    // 子组件点击我的频道时，nav跟着变化
+    toggleNav(index, status) {
+      this.active = index;
+      this.showPopup = status;
+    },
     async getUserChannels() {
       const res = await getUserChannels();
       this.userChannels = res.data.data.channels;

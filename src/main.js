@@ -6,6 +6,8 @@ import "@/styles/index.less";
 import "amfe-flexible";
 import store from "./store";
 import "vant/lib/index.less";
+
+import "@/utils/dayjs";
 // vant注册
 import vant from "vant";
 

@@ -6,3 +6,10 @@ export const getUserChannels = () => {
     method: "GET",
   });
 };
+// 获取所有频道
+export const getAllChannel = () => {
+  return request({
+    url: "/v1_0/channels",
+    method: "GET",
+  });
+};
