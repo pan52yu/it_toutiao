@@ -1,3 +1,4 @@
+// 定义本地存储获取
 export function getLocal(key) {
   let data = localStorage.getItem(key);
   try {
@@ -8,6 +9,7 @@ export function getLocal(key) {
   return data;
 }
 
+// 定义本地存储存储
 export function setLocal(key, data) {
   localStorage.setItem(
     key,

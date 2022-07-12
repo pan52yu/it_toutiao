@@ -52,9 +52,12 @@
 </template>
 
 <script>
-import { getAllChannel } from "@/api/channel";
+import { deleteUserChannel, getAddChannel, getAllChannel } from "@/api/channel";
 import { differenceBy } from "@/utils/ludashi";
-import { Notify } from "vant";
+import { Notify, Toast } from "vant";
+import { mapState } from "vuex";
+import { USERCHANNELKEY } from "@/constants";
+import { setLocal } from "@/utils/storage";
 
 export default {
   name: "ChannelEdit",
@@ -84,6 +87,7 @@ export default {
       //   return !this.userChannels.some((uitem) => uitem.id === item.id);
       // });
     },
+    ...mapState(["user"]),
   },
   watch: {},
   created() {
@@ -91,6 +95,18 @@ export default {
   },
   mounted() {},
   methods: {
+    async delChannel(channel) {
+      try {
+        if (this.user) {
+          await deleteUserChannel(channel.id);
+        } else {
+          setLocal(USERCHANNELKEY, this.userChannels);
+        }
+        Toast("删除成功");
+      } catch (e) {
+        Toast("删除失败");
+      }
+    },
     // 点击切换或者删除我的编辑选项
     onMyChannelClick(channel, index) {
       if (this.isEdit) {
@@ -108,14 +124,33 @@ export default {
           this.$emit("toggleNav", this.active - 1, true);
         }
         this.userChannels.splice(index, 1);
+        // 持久化
+        this.delChannel(channel);
       } else {
         // 非编辑状态  >> 切换 >> 关弹层
         this.$emit("toggleNav", index, false);
       }
     },
     // 点击将推荐列表添加到我的频道里
-    addChannel(item) {
+    async addChannel(item) {
       this.userChannels.push(item);
+      // 数据持久化
+      // 未登录保存到本地存储中
+      // 已登录保存到服务器中
+      if (this.user) {
+        try {
+          const res = await getAddChannel({
+            id: item.id,
+            seq: this.userChannels.length,
+          });
+          console.log(res);
+          Toast("添加成功");
+        } catch (e) {
+          Toast("添加失败");
+        }
+      } else {
+        setLocal(USERCHANNELKEY, this.userChannels);
+      }
     },
     // 获取全部的城市列表
     async getAllChannel() {

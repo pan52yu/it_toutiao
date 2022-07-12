@@ -9,6 +9,7 @@
           round
           class="vt-search-btn"
           type="info"
+          to="/search"
           >搜索
         </van-button>
       </template>
@@ -49,6 +50,8 @@
 import { getUserChannels } from "@/api/channel";
 import ArticleList from "@/views/home/components/article-list";
 import ChannelEdit from "@/views/home/components/channel-edit";
+import { USERCHANNELKEY } from "@/constants";
+import { getLocal } from "@/utils/storage";
 
 export default {
   name: "HomePage",
@@ -74,8 +77,21 @@ export default {
       this.showPopup = status;
     },
     async getUserChannels() {
-      const res = await getUserChannels();
-      this.userChannels = res.data.data.channels;
+      // const res = await getUserChannels();
+      // this.userChannels = res.data.data.channels;
+      try {
+        const token = this.$store.state.user?.token;
+        let channels = getLocal(USERCHANNELKEY);
+        // 如果用户已登录或者本地存储没数据，就从接口拿数据渲染
+        if (token || !channels) {
+          const res = await getUserChannels();
+          channels = res.data.data.channels;
+        }
+        // 如果用户没登录但本地存储有数据，就直接从本地存储拿数据
+        this.userChannels = channels;
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };
