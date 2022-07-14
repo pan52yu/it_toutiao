@@ -11,11 +11,11 @@ import "@/utils/dayjs";
 // vant注册
 import vant from "vant";
 
-import request from "@/utils/request";
-
-request.get("/v1_0/channels").then((res) => {
-  console.log(res.data.data.channels);
-});
+// import request from "@/utils/request";
+//
+// request.get("/v1_0/channels").then((res) => {
+//   console.log(res.data.data.channels);
+// });
 
 Vue.use(vant);
 Vue.component("TouTiao", TouTiao);
