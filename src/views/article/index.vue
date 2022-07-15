@@ -1,7 +1,12 @@
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条"></van-nav-bar>
+    <van-nav-bar
+      @click-left="$router.back()"
+      class="page-nav-bar"
+      left-arrow
+      title="黑马头条"
+    ></van-nav-bar>
     <!-- /导航栏 -->
 
     <div class="main-wrap">
@@ -44,6 +49,13 @@
           v-html="article.content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!--   文章评论S   -->
+        <CommentList
+          :list="commentList"
+          :source="article.art_id"
+          @reply-click="onReplyClick"
+        ></CommentList>
+        <!--   文章评论E   -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -67,9 +79,15 @@
 
     <!-- 底部区域 -->
     <div class="article-bottom">
-      <van-button class="comment-btn" type="default" round size="small"
+      <van-button
+        class="comment-btn"
+        type="default"
+        round
+        size="small"
+        @click="isPostShow = true"
         >写评论
       </van-button>
+
       <van-icon name="comment-o" :badge="article.comm_count" color="#777" />
       <CollectArticle
         :aut_id="article.art_id"
@@ -82,6 +100,24 @@
       <van-icon name="share" color="#777777"></van-icon>
     </div>
     <!-- /底部区域 -->
+
+    <!-------  发布评论 -------->
+    <van-popup v-model="isPostShow" position="bottom">
+      <CommentPost
+        @postSusses="postSusses"
+        :target="article.art_id"
+      ></CommentPost>
+    </van-popup>
+    <!------- /发布评论 -------->
+    <!------------------------ 评论回复 ------------------------------>
+    <van-popup v-model="isReplyShow" position="bottom" style="height: 100%">
+      <CommentReply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
+      ></CommentReply>
+    </van-popup>
+    <!------------------------ /评论回复 ------------------------------>
   </div>
 </template>
 
@@ -92,10 +128,27 @@ import { ImagePreview } from "vant";
 import FollowUser from "@/views/article/components/follow-user";
 import CollectArticle from "@/views/article/components/collect-article";
 import LikeArticle from "@/views/article/components/like-article";
+import CommentList from "@/views/article/components/comment-list";
+import CommentPost from "@/views/article/components/comment-post";
+import CommentReply from "@/views/article/components/comment-reply";
 
 export default {
   name: "ArticleIndex",
-  components: { CollectArticle, FollowUser, LikeArticle },
+  components: {
+    CommentReply,
+    CommentPost,
+    CommentList,
+    CollectArticle,
+    FollowUser,
+    LikeArticle,
+  },
+  // 给所有的后代组件提供数据
+  // 注意：不要滥用
+  provide() {
+    return {
+      articleId: this.articleId,
+    };
+  },
   props: {
     articleId: {
       type: [Number, String],
@@ -104,9 +157,13 @@ export default {
   },
   data() {
     return {
+      isReplyShow: false, // 控制评论回复弹层
+      commentList: [],
       isNotFound: false,
       loading: false,
       article: {},
+      isPostShow: false, // 发布评论弹层控制
+      currentComment: {}, // 当前点击回复的评论项
     };
   },
   computed: {},
@@ -116,6 +173,16 @@ export default {
   },
   mounted() {},
   methods: {
+    onReplyClick(comment) {
+      console.log(comment); // comment-item组件传递出来的数据
+      this.currentComment = comment;
+      // 显示评论回复弹出层
+      this.isReplyShow = true;
+    },
+    postSusses(data) {
+      this.isPostShow = false;
+      this.commentList.unshift(data);
+    },
     previewImg() {
       const imgs = this.$refs.content.querySelectorAll("img");
       const images = [];

@@ -1,12 +1,12 @@
 import App from "./App.vue";
 import Vue from "vue";
 import router from "./router";
+import store from "./store";
+
 import TouTiao from "@/components/TouTiaoIcon.vue";
 import "@/styles/index.less";
 import "amfe-flexible";
-import store from "./store";
 import "vant/lib/index.less";
-
 import "@/utils/dayjs";
 // vant注册
 import vant from "vant";
