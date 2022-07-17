@@ -1,5 +1,6 @@
 <template>
   <div class="comment-reply">
+    <!--  头部navbar  -->
     <van-nav-bar
       :title="
         comment.reply_count > 0 ? `${comment.reply_count}条回复` : '暂无回复'

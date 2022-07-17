@@ -1,4 +1,5 @@
 <template>
+  <!--   每一行的评论列表  -->
   <van-cell class="comment-item">
     <van-image
       slot="icon"
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import { addCommentLike, deleteCommentLike } from "@/utils/comment";
+import { addCommentLike, deleteCommentLike } from "@/api/comment";
 import { Toast } from "vant";
 
 export default {

@@ -49,13 +49,13 @@
           v-html="article.content"
         ></div>
         <van-divider>正文结束</van-divider>
-        <!--   文章评论S   -->
+        <!--------   文章评论列表S   -------->
         <CommentList
           :list="commentList"
           :source="article.art_id"
           @reply-click="onReplyClick"
         ></CommentList>
-        <!--   文章评论E   -->
+        <!--------   文章评论列表E   -------->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -109,15 +109,16 @@
       ></CommentPost>
     </van-popup>
     <!------- /发布评论 -------->
-    <!------------------------ 评论回复 ------------------------------>
+    <!-------- 评论回复 ---------->
     <van-popup v-model="isReplyShow" position="bottom" style="height: 100%">
+      <!--   使用v-if解决点击切换后页面视图不更新的问题   -->
       <CommentReply
         v-if="isReplyShow"
         :comment="currentComment"
         @close="isReplyShow = false"
       ></CommentReply>
     </van-popup>
-    <!------------------------ /评论回复 ------------------------------>
+    <!-------- /评论回复 -------->
   </div>
 </template>
 
@@ -128,6 +129,7 @@ import { ImagePreview } from "vant";
 import FollowUser from "@/views/article/components/follow-user";
 import CollectArticle from "@/views/article/components/collect-article";
 import LikeArticle from "@/views/article/components/like-article";
+// 文章评论列表
 import CommentList from "@/views/article/components/comment-list";
 import CommentPost from "@/views/article/components/comment-post";
 import CommentReply from "@/views/article/components/comment-reply";
@@ -174,7 +176,8 @@ export default {
   mounted() {},
   methods: {
     onReplyClick(comment) {
-      console.log(comment); // comment-item组件传递出来的数据
+      console.log(comment); // comment-item组件 >> comment-list >>传递出来的数据
+      // 存储起来
       this.currentComment = comment;
       // 显示评论回复弹出层
       this.isReplyShow = true;
@@ -182,6 +185,8 @@ export default {
     postSusses(data) {
       this.isPostShow = false;
       this.commentList.unshift(data);
+      // 评论数+1
+      this.article.comm_count++;
     },
     previewImg() {
       const imgs = this.$refs.content.querySelectorAll("img");

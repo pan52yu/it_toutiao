@@ -8,6 +8,7 @@
     :immediate-check="false"
     :error.sync="error"
   >
+    <!--   每一行的评论列表  -->
     <CommentItem
       v-for="(item, index) in list"
       :key="index"
@@ -17,7 +18,7 @@
   </van-list>
 </template>
 <script>
-import { getComments } from "@/utils/comment";
+import { getComments } from "@/api/comment";
 import CommentItem from "@/views/article/components/comment-item";
 
 export default {
@@ -42,9 +43,9 @@ export default {
       // list: [], // 评论列表
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
-      offset: null,
-      limit: 10,
-      error: false,
+      offset: null, // 获取下一页数据的标记
+      limit: 10, // 每次请求几条数据
+      error: false, // 控制vant列表错误提醒
     };
   },
   created() {
@@ -64,7 +65,7 @@ export default {
         });
         console.log(res.data);
         this.list.push(...res.data.data.results);
-        // 如果当前列表的最后一项,是所有的最后一项说明结束了
+        // 判断如果当前列表的最后一项,是所有的最后一项说明结束了
         if (res.data.data.end_id === res.data.data.last_id) {
           this.finished = true;
         } else {

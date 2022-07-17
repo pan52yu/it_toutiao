@@ -2,7 +2,7 @@
   <div class="comment-post">
     <van-field
       class="post-field"
-      v-model="message"
+      v-model.trim="message"
       rows="2"
       autosize
       type="textarea"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { addComment } from "@/utils/comment";
+import { addComment } from "@/api/comment";
 import { Toast } from "vant";
 
 export default {
